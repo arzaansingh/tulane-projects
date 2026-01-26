@@ -19,13 +19,13 @@
             --text-secondary: #9ca3af;
             --border: #2d3748;
             --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --arrow-up: #7eb8da;
+            --arrow-down: #e8a0a0;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Crimson Pro', serif;
@@ -39,10 +39,7 @@
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background-image: 
                 linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
@@ -59,10 +56,7 @@
             z-index: 1;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+        header { text-align: center; margin-bottom: 50px; }
 
         h1 {
             font-family: 'JetBrains Mono', monospace;
@@ -85,14 +79,8 @@
         }
 
         @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeIn {
@@ -108,14 +96,8 @@
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
         .control-panel {
@@ -128,9 +110,7 @@
             height: fit-content;
         }
 
-        .section {
-            margin-bottom: 30px;
-        }
+        .section { margin-bottom: 30px; }
 
         .section-title {
             font-family: 'JetBrains Mono', monospace;
@@ -189,9 +169,7 @@
             color: var(--text-primary);
         }
 
-        .equation-label .math {
-            font-style: italic;
-        }
+        .equation-label .math { font-style: italic; }
 
         .range-group {
             display: grid;
@@ -222,6 +200,28 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-med);
+            border-color: var(--accent-primary);
+        }
+        
+        .btn-update {
+            background: linear-gradient(135deg, var(--accent-tertiary), #cc9900);
+            color: var(--bg-dark);
+            box-shadow: 0 4px 15px rgba(255, 190, 11, 0.3);
+        }
+        
+        .btn-update:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 190, 11, 0.4);
         }
 
         .preset-grid {
@@ -279,6 +279,34 @@
             color: var(--accent-primary);
             font-family: 'JetBrains Mono', monospace;
         }
+        
+        .method-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+        
+        .method-analytical {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid #10b981;
+        }
+        
+        .method-numerical {
+            background: rgba(255, 190, 11, 0.2);
+            color: #ffbe0b;
+            border: 1px solid #ffbe0b;
+        }
+        
+        .method-error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
 
         .syntax-guide {
             background: var(--bg-light);
@@ -303,13 +331,8 @@
             padding-bottom: 0;
         }
 
-        .syntax-key {
-            color: var(--accent-secondary);
-        }
-
-        .syntax-value {
-            color: var(--text-secondary);
-        }
+        .syntax-key { color: var(--accent-secondary); }
+        .syntax-value { color: var(--text-secondary); }
 
         .loading {
             display: none;
@@ -318,9 +341,7 @@
             color: var(--text-secondary);
         }
 
-        .loading.active {
-            display: block;
-        }
+        .loading.active { display: block; }
 
         .spinner {
             border: 3px solid var(--bg-light);
@@ -336,28 +357,36 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        #bifurcationInfo {
+            margin-top: 15px;
+            padding: 12px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 4px;
+            border-left: 3px solid var(--error);
+        }
 
         @media (max-width: 1024px) {
-            .main-content {
-                grid-template-columns: 1fr;
-            }
-            h1 {
-                font-size: 2.5rem;
-            }
+            .main-content { grid-template-columns: 1fr; }
+            h1 { font-size: 2.5rem; }
         }
 
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--accent-primary);
-            border-radius: 4px;
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -398,6 +427,14 @@
                 <button class="btn btn-primary" onclick="generatePlot()">
                     ▶ Generate Plot
                 </button>
+                
+                <button class="btn btn-update" onclick="updateFromView()" style="margin-top: 10px;">
+                    🔄 Update from Current View
+                </button>
+                
+                <button class="btn btn-secondary" onclick="runTests()" style="margin-top: 10px;">
+                    🧪 Run Tests
+                </button>
 
                 <div class="section">
                     <div class="section-title">Presets</div>
@@ -437,6 +474,8 @@
                     <strong>Legend:</strong> Solid lines = stable equilibria, dashed lines = unstable equilibria. 
                     Magenta points mark bifurcations. Arrows show flow direction.
                 </div>
+                
+                <div id="bifurcationInfo"></div>
             </div>
 
             <div class="plot-container">
@@ -450,6 +489,9 @@
     </div>
 
     <script>
+        // ========================================
+        // CONFIGURATION
+        // ========================================
         const presets = {
             saddle: { eqn: 'x^3 - x + a', param: 'a', var: 'x', amin: -2, amax: 2, xmin: -2, xmax: 2 },
             pitchfork: { eqn: 'x^3 - a*x', param: 'a', var: 'x', amin: -4, amax: 4, xmin: -4, xmax: 4 },
@@ -458,6 +500,90 @@
             logistic: { eqn: 'r*x*(1 - x/k)', param: 'r', var: 'x', amin: -1, amax: 4, xmin: -1, xmax: 2 },
             sine: { eqn: 'sin(x) + a', param: 'a', var: 'x', amin: -2, amax: 2, xmin: -4, xmax: 4 }
         };
+        
+        // Store current plot data for view updates
+        let currentPlotData = null;
+        
+        // ========================================
+        // KNOWN ANALYTICAL BIFURCATION POINTS
+        // These are EXACT mathematical solutions
+        // ========================================
+        const ANALYTICAL_BIFURCATIONS = {
+            // x³ - x + a: Saddle-node bifurcations (fold points)
+            // df/dx = 3x² - 1 = 0  =>  x = ±1/√3
+            // At x = 1/√3:  a = x - x³ = 2/(3√3) ≈ 0.3849
+            // At x = -1/√3: a = x - x³ = -2/(3√3) ≈ -0.3849
+            'x^3-x+a': () => {
+                const sqrt3 = Math.sqrt(3);
+                const x1 = 1/sqrt3;
+                const x2 = -1/sqrt3;
+                return [
+                    { a: x1 - x1**3, x: x1 },   // (≈0.3849, ≈0.5774) - upper fold
+                    { a: x2 - x2**3, x: x2 }    // (≈-0.3849, ≈-0.5774) - lower fold
+                ];
+            },
+            
+            // x³ - a*x: Pitchfork bifurcation
+            // f = x³ - ax = x(x² - a), df/dx = 3x² - a
+            // Bifurcation: x(x² - a) = 0 AND 3x² - a = 0
+            // At x = 0: f = 0, df/dx = -a, so need a = 0
+            'x^3-a*x': () => [{ a: 0, x: 0 }],
+            
+            // x² - a*x: Transcritical bifurcation
+            // f = x² - ax = x(x - a), df/dx = 2x - a
+            // Bifurcation: x(x - a) = 0 AND 2x - a = 0
+            // At x = 0: need a = 0
+            'x^2-a*x': () => [{ a: 0, x: 0 }],
+            
+            // x² - a: Saddle-node bifurcation
+            // f = x² - a, df/dx = 2x
+            // Bifurcation: x² - a = 0 AND 2x = 0  =>  x = 0, a = 0
+            'x^2-a': () => [{ a: 0, x: 0 }],
+            
+            // r*x*(1 - x/k) with k=1: Logistic growth
+            // f = rx(1-x) = rx - rx², df/dx = r - 2rx = r(1-2x)
+            // Equilibria: x = 0 or x = 1
+            // Bifurcation at x=0: df/dx = r = 0 when r = 0
+            // This is a transcritical bifurcation at (r=0, x=0)
+            'r*x*(1-x/k)': () => [{ a: 0, x: 0 }],
+            
+            // sin(x) + a: 
+            // df/dx = cos(x) = 0  =>  x = (2n+1)π/2
+            // At x = π/2: a = -sin(π/2) = -1
+            // At x = -π/2: a = -sin(-π/2) = 1
+            // At x = 3π/2: a = -sin(3π/2) = 1
+            'sin(x)+a': () => {
+                const points = [];
+                for (let n = -5; n <= 5; n++) {
+                    const x = (2*n + 1) * Math.PI / 2;
+                    const a = -Math.sin(x);
+                    points.push({ a, x });
+                }
+                return points;
+            }
+        };
+
+        // ========================================
+        // UTILITY FUNCTIONS
+        // ========================================
+        
+        function formatCoord(val) {
+            if (Math.abs(val - Math.round(val)) < 1e-9) {
+                return Math.round(val).toString();
+            }
+            const sqrt3 = Math.sqrt(3);
+            if (Math.abs(val - 1/sqrt3) < 1e-6) return '1/√3';
+            if (Math.abs(val + 1/sqrt3) < 1e-6) return '-1/√3';
+            if (Math.abs(val - 2/(3*sqrt3)) < 1e-6) return '2√3/9';
+            if (Math.abs(val + 2/(3*sqrt3)) < 1e-6) return '-2√3/9';
+            if (Math.abs(val - Math.PI/2) < 1e-6) return 'π/2';
+            if (Math.abs(val + Math.PI/2) < 1e-6) return '-π/2';
+            return val.toFixed(4);
+        }
+        
+        function normalizeEquation(eqn) {
+            return eqn.replace(/\s+/g, '').replace(/\*\*/g, '^').toLowerCase();
+        }
 
         function loadPreset(name) {
             const p = presets[name];
@@ -471,51 +597,269 @@
             generatePlot();
         }
 
-        function formatCoord(val) {
-            return Math.abs(val - Math.round(val)) < 1e-9 ? Math.round(val).toString() : val.toFixed(4);
+        // ========================================
+        // CORE EVALUATION FUNCTIONS
+        // ========================================
+        
+        function evalSystem(eqnCompiled, derivCompiled, param, varName, a, x) {
+            const scope = { [param]: a, [varName]: x, k: 1.0, r: a, pi: Math.PI, e: Math.E };
+            try {
+                const f = eqnCompiled.evaluate(scope);
+                const df = derivCompiled.evaluate(scope);
+                if (isFinite(f) && isFinite(df)) {
+                    return { f, df, valid: true };
+                }
+            } catch {}
+            return { f: NaN, df: NaN, valid: false };
+        }
+        
+        /**
+         * CRITICAL: Verify that a bifurcation point actually lies on the equilibrium curve
+         * A valid bifurcation point must satisfy:
+         * 1. f(a, x) ≈ 0 (on the equilibrium curve)
+         * 2. df/dx(a, x) ≈ 0 (stability changes)
+         */
+        function verifyBifurcationPoint(eqnCompiled, derivCompiled, param, varName, a, x, tolerance = 1e-6) {
+            const ev = evalSystem(eqnCompiled, derivCompiled, param, varName, a, x);
+            if (!ev.valid) return { valid: false, reason: 'evaluation failed' };
+            
+            const fError = Math.abs(ev.f);
+            const dfError = Math.abs(ev.df);
+            
+            if (fError > tolerance) {
+                return { valid: false, reason: `f=${fError.toExponential(2)} (not on equilibrium curve)`, f: ev.f, df: ev.df };
+            }
+            if (dfError > tolerance) {
+                return { valid: false, reason: `df/dx=${dfError.toExponential(2)} (not a bifurcation)`, f: ev.f, df: ev.df };
+            }
+            
+            return { valid: true, f: ev.f, df: ev.df };
         }
 
-        function findBifurcationPoints(eqnComp, derivComp, param, varName, aBounds, xBounds) {
-            const res = 60;
-            const bifPoints = [];
-            const aStep = (aBounds[1] - aBounds[0]) / (res - 1);
-            const xStep = (xBounds[1] - xBounds[0]) / (res - 1);
-            const errorGrid = [];
+        // ========================================
+        // NUMERICAL BIFURCATION DETECTION
+        // ========================================
+        
+        /**
+         * Newton-Raphson for finding bifurcation points
+         * Solves: f(a,x) = 0 AND df/dx(a,x) = 0
+         */
+        function newtonRaphson2D(eqnCompiled, derivCompiled, param, varName, a0, x0, maxIter = 100, tol = 1e-12) {
+            let a = a0, x = x0;
+            const h = 1e-8;
             
-            for (let i = 0; i < res; i++) {
-                errorGrid[i] = [];
-                for (let j = 0; j < res; j++) {
-                    const scope = { [param]: aBounds[0] + i * aStep, [varName]: xBounds[0] + j * xStep, k: 1.0, r: aBounds[0] + i * aStep };
-                    try {
-                        const f = eqnComp.evaluate(scope);
-                        const df = derivComp.evaluate(scope);
-                        errorGrid[i][j] = Math.log10(f * f + df * df + 1e-15);
-                    } catch { errorGrid[i][j] = 0; }
+            for (let iter = 0; iter < maxIter; iter++) {
+                const ev = evalSystem(eqnCompiled, derivCompiled, param, varName, a, x);
+                if (!ev.valid) return null;
+                
+                const F1 = ev.f;
+                const F2 = ev.df;
+                const error = F1*F1 + F2*F2;
+                
+                if (error < tol) {
+                    return { a, x, error, iterations: iter };
+                }
+                
+                // Compute Jacobian numerically
+                const ev_ap = evalSystem(eqnCompiled, derivCompiled, param, varName, a + h, x);
+                const ev_xp = evalSystem(eqnCompiled, derivCompiled, param, varName, a, x + h);
+                
+                if (!ev_ap.valid || !ev_xp.valid) return null;
+                
+                const dF1_da = (ev_ap.f - F1) / h;
+                const dF1_dx = (ev_xp.f - F1) / h;
+                const dF2_da = (ev_ap.df - F2) / h;
+                const dF2_dx = (ev_xp.df - F2) / h;
+                
+                const det = dF1_da * dF2_dx - dF1_dx * dF2_da;
+                
+                if (Math.abs(det) < 1e-14) {
+                    // Singular - try gradient descent
+                    const grad_a = 2 * F1 * dF1_da + 2 * F2 * dF2_da;
+                    const grad_x = 2 * F1 * dF1_dx + 2 * F2 * dF2_dx;
+                    const gradNorm = Math.sqrt(grad_a*grad_a + grad_x*grad_x);
+                    if (gradNorm < 1e-14) return null;
+                    
+                    const step = 0.01;
+                    a -= step * grad_a / gradNorm;
+                    x -= step * grad_x / gradNorm;
+                } else {
+                    const da = -(dF2_dx * F1 - dF1_dx * F2) / det;
+                    const dx = -(-dF2_da * F1 + dF1_da * F2) / det;
+                    
+                    const scale = Math.min(1.0, 1 / Math.max(Math.abs(da), Math.abs(dx), 1));
+                    a += da * scale;
+                    x += dx * scale;
                 }
             }
             
-            for (let i = 1; i < res - 1; i++) {
-                for (let j = 1; j < res - 1; j++) {
-                    if (errorGrid[i][j] < -2) {
-                        let isMin = true;
-                        for (let di = -1; di <= 1 && isMin; di++) {
-                            for (let dj = -1; dj <= 1 && isMin; dj++) {
-                                if (errorGrid[i + di][j + dj] < errorGrid[i][j]) isMin = false;
-                            }
-                        }
-                        if (isMin) {
-                            const a = aBounds[0] + i * aStep;
-                            const x = xBounds[0] + j * xStep;
-                            if (!bifPoints.some(pt => Math.hypot(a - pt[0], x - pt[1]) < 0.05 * (aBounds[1] - aBounds[0]))) {
-                                bifPoints.push([a, x]);
+            return null;
+        }
+        
+        /**
+         * Find bifurcation points numerically using multiple strategies
+         */
+        function findNumericalBifurcations(eqnCompiled, derivCompiled, param, varName, aBounds, xBounds) {
+            const candidates = [];
+            const aRange = aBounds[1] - aBounds[0];
+            const xRange = xBounds[1] - xBounds[0];
+            
+            // Strategy 1: Grid search for sign changes in both f and df
+            const res = 100;
+            for (let i = 0; i < res; i++) {
+                for (let j = 0; j < res; j++) {
+                    const a = aBounds[0] + aRange * (i + 0.5) / res;
+                    const x = xBounds[0] + xRange * (j + 0.5) / res;
+                    
+                    // Check 2x2 cell for simultaneous sign changes
+                    const ev00 = evalSystem(eqnCompiled, derivCompiled, param, varName, a, x);
+                    const ev10 = evalSystem(eqnCompiled, derivCompiled, param, varName, a + aRange/res, x);
+                    const ev01 = evalSystem(eqnCompiled, derivCompiled, param, varName, a, x + xRange/res);
+                    const ev11 = evalSystem(eqnCompiled, derivCompiled, param, varName, a + aRange/res, x + xRange/res);
+                    
+                    if (ev00.valid && ev10.valid && ev01.valid && ev11.valid) {
+                        const fVals = [ev00.f, ev10.f, ev01.f, ev11.f];
+                        const dfVals = [ev00.df, ev10.df, ev01.df, ev11.df];
+                        
+                        const fHasZero = Math.min(...fVals) * Math.max(...fVals) <= 0;
+                        const dfHasZero = Math.min(...dfVals) * Math.max(...dfVals) <= 0;
+                        
+                        if (fHasZero && dfHasZero) {
+                            const result = newtonRaphson2D(eqnCompiled, derivCompiled, param, varName, 
+                                                          a + aRange/(2*res), x + xRange/(2*res));
+                            if (result) {
+                                candidates.push(result);
                             }
                         }
                     }
                 }
             }
-            return bifPoints;
+            
+            // Strategy 2: Multi-start from Halton sequence
+            function halton(index, base) {
+                let result = 0, f = 1/base, i = index;
+                while (i > 0) {
+                    result += f * (i % base);
+                    i = Math.floor(i / base);
+                    f /= base;
+                }
+                return result;
+            }
+            
+            for (let n = 0; n < 100; n++) {
+                const a = aBounds[0] + aRange * halton(n + 1, 2);
+                const x = xBounds[0] + xRange * halton(n + 1, 3);
+                const result = newtonRaphson2D(eqnCompiled, derivCompiled, param, varName, a, x);
+                if (result) {
+                    candidates.push(result);
+                }
+            }
+            
+            return candidates;
+        }
+        
+        /**
+         * Deduplicate and filter bifurcation points
+         */
+        function deduplicateAndVerify(candidates, eqnCompiled, derivCompiled, param, varName, aBounds, xBounds) {
+            const aRange = aBounds[1] - aBounds[0];
+            const xRange = xBounds[1] - xBounds[0];
+            const threshold = Math.min(aRange, xRange) * 0.02;
+            
+            const verified = [];
+            
+            for (const cand of candidates) {
+                // Verify the point is valid
+                const check = verifyBifurcationPoint(eqnCompiled, derivCompiled, param, varName, cand.a, cand.x, 1e-6);
+                if (!check.valid) continue;
+                
+                // Check if within bounds (with small margin)
+                if (cand.a < aBounds[0] - 0.01*aRange || cand.a > aBounds[1] + 0.01*aRange) continue;
+                if (cand.x < xBounds[0] - 0.01*xRange || cand.x > xBounds[1] + 0.01*xRange) continue;
+                
+                // Check for duplicates
+                let isDup = false;
+                for (const v of verified) {
+                    if (Math.hypot(cand.a - v.a, cand.x - v.x) < threshold) {
+                        if (cand.error < v.error) {
+                            v.a = cand.a;
+                            v.x = cand.x;
+                            v.error = cand.error;
+                        }
+                        isDup = true;
+                        break;
+                    }
+                }
+                
+                if (!isDup) {
+                    verified.push({ a: cand.a, x: cand.x, error: cand.error });
+                }
+            }
+            
+            // Sort by parameter value and limit
+            verified.sort((a, b) => a.a - b.a);
+            return verified.slice(0, 10);
         }
 
+        // ========================================
+        // MAIN BIFURCATION FINDER
+        // ========================================
+        
+        function findBifurcationPoints(eqnStr, eqnCompiled, derivCompiled, param, varName, aBounds, xBounds) {
+            const aRange = aBounds[1] - aBounds[0];
+            const xRange = xBounds[1] - xBounds[0];
+            const errors = [];
+            
+            // Step 1: Try analytical solutions
+            const normalized = normalizeEquation(eqnStr);
+            for (const [pattern, generator] of Object.entries(ANALYTICAL_BIFURCATIONS)) {
+                if (normalizeEquation(pattern) === normalized) {
+                    const allPoints = generator();
+                    const verified = [];
+                    
+                    for (const p of allPoints) {
+                        // Must be in bounds
+                        if (p.a < aBounds[0] - 0.01*aRange || p.a > aBounds[1] + 0.01*aRange) continue;
+                        if (p.x < xBounds[0] - 0.01*xRange || p.x > xBounds[1] + 0.01*xRange) continue;
+                        
+                        // Must pass verification
+                        const check = verifyBifurcationPoint(eqnCompiled, derivCompiled, param, varName, p.a, p.x, 1e-6);
+                        if (check.valid) {
+                            verified.push([p.a, p.x]);
+                        } else {
+                            errors.push(`Analytical point (${p.a.toFixed(4)}, ${p.x.toFixed(4)}) failed: ${check.reason}`);
+                        }
+                    }
+                    
+                    if (verified.length > 0) {
+                        return { points: verified.slice(0, 10), method: 'Analytical', errors };
+                    }
+                }
+            }
+            
+            // Step 2: Numerical search
+            console.log("Running numerical bifurcation detection...");
+            const candidates = findNumericalBifurcations(eqnCompiled, derivCompiled, param, varName, aBounds, xBounds);
+            console.log(`Found ${candidates.length} candidates`);
+            
+            const verified = deduplicateAndVerify(candidates, eqnCompiled, derivCompiled, param, varName, aBounds, xBounds);
+            console.log(`Verified ${verified.length} points`);
+            
+            if (verified.length === 0 && candidates.length > 0) {
+                errors.push(`Found ${candidates.length} candidates but none passed verification (not on equilibrium curve)`);
+            }
+            
+            return {
+                points: verified.map(p => [p.a, p.x]),
+                method: 'Numerical',
+                errors
+            };
+        }
+
+        // ========================================
+        // PLOT GENERATION
+        // ========================================
+        
         function generatePlot() {
             const eqnStr = document.getElementById('eqnInput').value;
             const param = document.getElementById('paramInput').value;
@@ -527,137 +871,342 @@
 
             document.getElementById('loading').classList.add('active');
             document.getElementById('plot').style.display = 'none';
+            document.getElementById('bifurcationInfo').innerHTML = '';
 
             setTimeout(() => {
                 try {
                     const eqnCompiled = math.compile(eqnStr);
                     const derivCompiled = math.derivative(math.parse(eqnStr), varName).compile();
-                    const bifPoints = findBifurcationPoints(eqnCompiled, derivCompiled, param, varName, [aMin, aMax], [xMin, xMax]);
-
-                    const res = 300;
-                    const aVals = Array.from({length: res}, (_, i) => aMin + (aMax - aMin) * i / (res - 1));
-                    const xVals = Array.from({length: res}, (_, i) => xMin + (xMax - xMin) * i / (res - 1));
                     
-                    const Z = [], dZ = [];
-                    for (let j = 0; j < res; j++) {
-                        Z[j] = [];
-                        dZ[j] = [];
-                        for (let i = 0; i < res; i++) {
-                            const scope = { [param]: aVals[i], [varName]: xVals[j], k: 1.0, r: aVals[i] };
-                            try {
-                                Z[j][i] = eqnCompiled.evaluate(scope);
-                                dZ[j][i] = derivCompiled.evaluate(scope);
-                                if (!isFinite(Z[j][i])) Z[j][i] = 0;
-                                if (!isFinite(dZ[j][i])) dZ[j][i] = 0;
-                            } catch {
-                                Z[j][i] = 0;
-                                dZ[j][i] = 0;
-                            }
-                        }
-                    }
-
-                    const traces = [{
-                        type: 'heatmap',
-                        x: aVals,
-                        y: xVals,
-                        z: Z.map(row => row.map(v => Math.sign(v))),
-                        colorscale: [[0, 'rgba(255,230,230,0.5)'], [0.5, 'rgba(255,255,255,0)'], [1, 'rgba(230,242,255,0.5)']],
-                        showscale: false,
-                        hoverinfo: 'skip',
-                        zmin: -1,
-                        zmax: 1
-                    }];
-
-                    // Arrows
-                    const arrRes = 18;
-                    for (let i = 0; i < arrRes; i++) {
-                        for (let j = 0; j < arrRes; j++) {
-                            const a = aMin + (aMax - aMin) * i / (arrRes - 1);
-                            const x = xMin + (xMax - xMin) * j / (arrRes - 1);
-                            const scope = { [param]: a, [varName]: x, k: 1.0, r: a };
-                            try {
-                                const f = eqnCompiled.evaluate(scope);
-                                const maxZ = Math.max(...Z.flat().map(Math.abs));
-                                if (isFinite(f) && Math.abs(f) > 0.05 * maxZ) {
-                                    traces.push({
-                                        type: 'scatter',
-                                        x: [a, a],
-                                        y: [x, x + Math.sign(f) * 0.04 * (xMax - xMin)],
-                                        mode: 'lines',
-                                        line: { color: f > 0 ? '#004488' : '#880000', width: 1.5 },
-                                        showlegend: false,
-                                        hoverinfo: 'skip'
-                                    });
-                                }
-                            } catch {}
-                        }
-                    }
-
-                    // Contours with masking
-                    const Z_stable = Z.map((row, j) => row.map((v, i) => dZ[j][i] < 0 ? v : null));
-                    const Z_unstable = Z.map((row, j) => row.map((v, i) => dZ[j][i] >= 0 ? v : null));
-
-                    traces.push({
-                        type: 'contour',
-                        x: aVals,
-                        y: xVals,
-                        z: Z_stable,
-                        contours: { start: 0, end: 0, size: 1, coloring: 'none' },
-                        line: { color: 'black', width: 3 },
-                        showscale: false,
-                        name: 'Stable',
-                        hoverinfo: 'skip'
-                    });
-
-                    traces.push({
-                        type: 'contour',
-                        x: aVals,
-                        y: xVals,
-                        z: Z_unstable,
-                        contours: { start: 0, end: 0, size: 1, coloring: 'none' },
-                        line: { color: 'black', width: 3, dash: 'dash' },
-                        showscale: false,
-                        name: 'Unstable',
-                        hoverinfo: 'skip'
-                    });
-
-                    if (bifPoints.length > 0) {
-                        traces.push({
-                            type: 'scatter',
-                            x: bifPoints.map(p => p[0]),
-                            y: bifPoints.map(p => p[1]),
-                            mode: 'markers+text',
-                            marker: { color: '#ff00ff', size: 10, line: { color: 'black', width: 2 } },
-                            text: bifPoints.map(p => `(${formatCoord(p[0])}, ${formatCoord(p[1])})`),
-                            textposition: 'top right',
-                            textfont: { family: 'JetBrains Mono', size: 10, color: '#e8edf4' },
-                            name: 'Bifurcation'
-                        });
-                    }
-
-                    Plotly.newPlot('plot', traces, {
-                        title: { text: `d${varName}/dt = ${eqnStr}`, font: { family: 'JetBrains Mono', size: 18, color: '#e8edf4' } },
-                        xaxis: { title: `Parameter (${param})`, gridcolor: '#2d3748', zerolinecolor: '#4a5568', color: '#e8edf4' },
-                        yaxis: { title: `Variable (${varName})`, gridcolor: '#2d3748', zerolinecolor: '#4a5568', color: '#e8edf4' },
-                        plot_bgcolor: '#151b2b',
-                        paper_bgcolor: '#151b2b',
-                        font: { family: 'Crimson Pro', color: '#e8edf4' },
-                        legend: { font: { family: 'JetBrains Mono', size: 11 }, bgcolor: 'rgba(21,27,43,0.8)', bordercolor: '#2d3748', borderwidth: 1 },
-                        margin: { t: 80, r: 20, b: 80, l: 80 }
-                    }, { responsive: true, displaylogo: false });
+                    const bifResult = findBifurcationPoints(eqnStr, eqnCompiled, derivCompiled, 
+                                                           param, varName, [aMin, aMax], [xMin, xMax]);
                     
+                    currentPlotData = {
+                        eqnStr, eqnCompiled, derivCompiled, param, varName,
+                        originalBounds: { aMin, aMax, xMin, xMax },
+                        bifPoints: bifResult.points,
+                        bifMethod: bifResult.method,
+                        errors: bifResult.errors
+                    };
+                    
+                    updateBifurcationInfo(bifResult.points, bifResult.method, bifResult.errors);
+                    renderPlot(eqnCompiled, derivCompiled, param, varName, aMin, aMax, xMin, xMax, 
+                              bifResult.points, bifResult.method, eqnStr);
+
                     document.getElementById('loading').classList.remove('active');
                     document.getElementById('plot').style.display = 'block';
+
                 } catch (error) {
                     console.error(error);
                     document.getElementById('loading').classList.remove('active');
                     document.getElementById('plot').style.display = 'block';
-                    alert('Error: ' + error.message);
+                    
+                    Plotly.newPlot('plot', [], {
+                        title: { text: `Error: ${error.message}`, font: { color: '#ff6b6b' } },
+                        plot_bgcolor: '#151b2b',
+                        paper_bgcolor: '#151b2b'
+                    });
                 }
-            }, 100);
+            }, 50);
+        }
+        
+        function renderPlot(eqnCompiled, derivCompiled, param, varName, aMin, aMax, xMin, xMax, bifPoints, bifMethod, eqnStr) {
+            const aRange = aMax - aMin;
+            const xRange = xMax - xMin;
+            
+            // Generate grid
+            const res = 300;
+            const aVals = Array.from({length: res}, (_, i) => aMin + aRange * i / (res - 1));
+            const xVals = Array.from({length: res}, (_, i) => xMin + xRange * i / (res - 1));
+            
+            const Z = [], dZ = [];
+            for (let j = 0; j < res; j++) {
+                Z[j] = [];
+                dZ[j] = [];
+                for (let i = 0; i < res; i++) {
+                    const ev = evalSystem(eqnCompiled, derivCompiled, param, varName, aVals[i], xVals[j]);
+                    Z[j][i] = ev.valid ? ev.f : 0;
+                    dZ[j][i] = ev.valid ? ev.df : 0;
+                }
+            }
+
+            // Traces
+            const traces = [{
+                type: 'heatmap',
+                x: aVals,
+                y: xVals,
+                z: Z.map(row => row.map(v => Math.sign(v))),
+                colorscale: [[0, 'rgba(232,160,160,0.4)'], [0.5, 'rgba(255,255,255,0)'], [1, 'rgba(126,184,218,0.4)']],
+                showscale: false,
+                hoverinfo: 'skip',
+                zmin: -1,
+                zmax: 1
+            }];
+
+            // Arrows
+            const avgRange = (aRange + xRange) / 2;
+            const arrRes = Math.max(12, Math.min(25, Math.round(18 * avgRange / 4)));
+            const arrowLength = 0.03 * xRange;
+            const arrowWidth = Math.max(1.2, Math.min(2.5, 2 * (4 / avgRange)));
+            
+            const annotations = [];
+            const maxZ = Math.max(...Z.flat().map(Math.abs).filter(isFinite)) || 1;
+            const threshold = 0.02 * maxZ;
+            
+            for (let i = 0; i < arrRes; i++) {
+                for (let j = 0; j < arrRes; j++) {
+                    const a = aMin + aRange * (i + 0.5) / arrRes;
+                    const x = xMin + xRange * (j + 0.5) / arrRes;
+                    const ev = evalSystem(eqnCompiled, derivCompiled, param, varName, a, x);
+                    
+                    if (ev.valid && Math.abs(ev.f) > threshold) {
+                        const arrowColor = ev.f > 0 ? '#7eb8da' : '#e8a0a0';
+                        const startY = ev.f > 0 ? x - arrowLength/2 : x + arrowLength/2;
+                        const endY = ev.f > 0 ? x + arrowLength/2 : x - arrowLength/2;
+                        
+                        annotations.push({
+                            x: a, y: endY, ax: a, ay: startY,
+                            xref: 'x', yref: 'y', axref: 'x', ayref: 'y',
+                            showarrow: true, arrowhead: 2, arrowsize: 1.2,
+                            arrowwidth: arrowWidth, arrowcolor: arrowColor
+                        });
+                    }
+                }
+            }
+
+            // Contours
+            const Z_stable = Z.map((row, j) => row.map((v, i) => dZ[j][i] < 0 ? v : null));
+            const Z_unstable = Z.map((row, j) => row.map((v, i) => dZ[j][i] >= 0 ? v : null));
+
+            traces.push({
+                type: 'contour', x: aVals, y: xVals, z: Z_stable,
+                contours: { start: 0, end: 0, size: 1, coloring: 'none' },
+                line: { color: 'black', width: 3 },
+                showscale: false, name: 'Stable', hoverinfo: 'skip'
+            });
+
+            traces.push({
+                type: 'contour', x: aVals, y: xVals, z: Z_unstable,
+                contours: { start: 0, end: 0, size: 1, coloring: 'none' },
+                line: { color: 'black', width: 3, dash: 'dash' },
+                showscale: false, name: 'Unstable', hoverinfo: 'skip'
+            });
+
+            // Legend
+            traces.push({ type: 'scatter', x: [null], y: [null], mode: 'lines', line: { color: 'black', width: 3 }, name: 'Stable', showlegend: true });
+            traces.push({ type: 'scatter', x: [null], y: [null], mode: 'lines', line: { color: 'black', width: 3, dash: 'dash' }, name: 'Unstable', showlegend: true });
+            traces.push({ type: 'scatter', x: [null], y: [null], mode: 'markers', marker: { color: '#7eb8da', size: 12, symbol: 'triangle-up' }, name: 'Flow Up', showlegend: true });
+            traces.push({ type: 'scatter', x: [null], y: [null], mode: 'markers', marker: { color: '#e8a0a0', size: 12, symbol: 'triangle-down' }, name: 'Flow Down', showlegend: true });
+
+            // Bifurcation points
+            if (bifPoints.length > 0) {
+                traces.push({
+                    type: 'scatter',
+                    x: bifPoints.map(p => p[0]),
+                    y: bifPoints.map(p => p[1]),
+                    mode: 'markers+text',
+                    marker: { color: '#ff00ff', size: 14, line: { color: 'white', width: 2 }, symbol: 'circle' },
+                    text: bifPoints.map(p => `(${formatCoord(p[0])}, ${formatCoord(p[1])})`),
+                    textposition: 'top right',
+                    textfont: { family: 'JetBrains Mono', size: 11, color: '#ff00ff' },
+                    name: 'Bifurcation',
+                    hovertemplate: 'a = %{x:.6f}<br>x = %{y:.6f}<extra></extra>'
+                });
+            }
+
+            const layout = {
+                title: { text: `d${varName}/dt = ${eqnStr}`, font: { family: 'JetBrains Mono', size: 18, color: '#e8edf4' } },
+                xaxis: { title: `Parameter (${param})`, gridcolor: '#2d3748', zerolinecolor: '#4a5568', color: '#e8edf4', range: [aMin, aMax] },
+                yaxis: { title: `Variable (${varName})`, gridcolor: '#2d3748', zerolinecolor: '#4a5568', color: '#e8edf4', range: [xMin, xMax] },
+                plot_bgcolor: '#151b2b',
+                paper_bgcolor: '#151b2b',
+                font: { family: 'Crimson Pro', color: '#e8edf4' },
+                legend: { 
+                    font: { family: 'JetBrains Mono', size: 11, color: '#e8edf4' }, 
+                    bgcolor: '#1a2332',  // Solid opaque background
+                    bordercolor: '#3d4a5c', 
+                    borderwidth: 2,
+                    x: 1.02,  // Position outside plot area
+                    y: 1, 
+                    xanchor: 'left',
+                    yanchor: 'top',
+                    itemsizing: 'constant',
+                    itemwidth: 40
+                },
+                margin: { t: 80, r: 150, b: 80, l: 80 },
+                annotations: annotations
+            };
+
+            Plotly.newPlot('plot', traces, layout, { responsive: true });
+        }
+        
+        function updateBifurcationInfo(points, method, errors = []) {
+            const infoDiv = document.getElementById('bifurcationInfo');
+            
+            let html = '';
+            
+            if (points.length === 0) {
+                html = `<div style="color: var(--text-secondary);">No verified bifurcation points found in the current range.</div>`;
+            } else {
+                const methodBadge = method === 'Analytical' 
+                    ? '<span class="method-badge method-analytical">Analytical</span>'
+                    : '<span class="method-badge method-numerical">Numerical</span>';
+                
+                const pointsList = points.map(p => 
+                    `<div style="margin: 4px 0; color: #ff00ff;">(${formatCoord(p[0])}, ${formatCoord(p[1])})</div>`
+                ).join('');
+                
+                html = `
+                    <div style="margin-bottom: 8px;">
+                        <strong style="color: var(--accent-primary);">Bifurcation Points (${points.length})</strong>
+                        ${methodBadge}
+                    </div>
+                    ${pointsList}
+                `;
+            }
+            
+            // Show errors if any
+            if (errors && errors.length > 0) {
+                html += `<div class="error-message">⚠️ ${errors.join('<br>')}</div>`;
+            }
+            
+            infoDiv.innerHTML = html;
+        }
+        
+        function updateFromView() {
+            const plotDiv = document.getElementById('plot');
+            
+            if (!plotDiv.layout || !currentPlotData) {
+                alert('Please generate a plot first!');
+                return;
+            }
+            
+            const xaxis = plotDiv.layout.xaxis;
+            const yaxis = plotDiv.layout.yaxis;
+            
+            const newAMin = xaxis.range ? xaxis.range[0] : currentPlotData.originalBounds.aMin;
+            const newAMax = xaxis.range ? xaxis.range[1] : currentPlotData.originalBounds.aMax;
+            const newXMin = yaxis.range ? yaxis.range[0] : currentPlotData.originalBounds.xMin;
+            const newXMax = yaxis.range ? yaxis.range[1] : currentPlotData.originalBounds.xMax;
+            
+            document.getElementById('aMin').value = newAMin.toFixed(4);
+            document.getElementById('aMax').value = newAMax.toFixed(4);
+            document.getElementById('xMin').value = newXMin.toFixed(4);
+            document.getElementById('xMax').value = newXMax.toFixed(4);
+            
+            generatePlot();
         }
 
-        window.onload = generatePlot;
+        // ========================================
+        // TESTING
+        // ========================================
+        
+        function runTests() {
+            console.log("Running Diagnostics...");
+            let results = "BIFURCATION POINT DETECTION TESTS\n" + "=".repeat(40) + "\n\n";
+            let allPassed = true;
+            
+            const sqrt3 = Math.sqrt(3);
+            
+            const tests = [
+                {
+                    name: "Saddle-Node (x³-x+a)",
+                    eqn: "x^3 - x + a", param: "a", varName: "x",
+                    bounds: { a: [-2, 2], x: [-2, 2] },
+                    expected: 2,
+                    verify: (pts) => {
+                        // Should find (≈0.3849, ≈0.5774) and (≈-0.3849, ≈-0.5774)
+                        const p1 = pts.some(p => Math.abs(p[0] - 2/(3*sqrt3)) < 0.01 && Math.abs(p[1] - 1/sqrt3) < 0.01);
+                        const p2 = pts.some(p => Math.abs(p[0] + 2/(3*sqrt3)) < 0.01 && Math.abs(p[1] + 1/sqrt3) < 0.01);
+                        return p1 && p2;
+                    }
+                },
+                {
+                    name: "Pitchfork (x³-ax)",
+                    eqn: "x^3 - a*x", param: "a", varName: "x",
+                    bounds: { a: [-4, 4], x: [-4, 4] },
+                    expected: 1,
+                    verify: (pts) => pts.some(p => Math.abs(p[0]) < 0.1 && Math.abs(p[1]) < 0.1)
+                },
+                {
+                    name: "Transcritical (x²-ax)",
+                    eqn: "x^2 - a*x", param: "a", varName: "x",
+                    bounds: { a: [-4, 4], x: [-4, 4] },
+                    expected: 1,
+                    verify: (pts) => pts.some(p => Math.abs(p[0]) < 0.1 && Math.abs(p[1]) < 0.1)
+                },
+                {
+                    name: "Simple Saddle-Node (x²-a)",
+                    eqn: "x^2 - a", param: "a", varName: "x",
+                    bounds: { a: [-2, 2], x: [-2, 2] },
+                    expected: 1,
+                    verify: (pts) => pts.some(p => Math.abs(p[0]) < 0.1 && Math.abs(p[1]) < 0.1)
+                },
+                {
+                    name: "Logistic (r*x*(1-x/k))",
+                    eqn: "r*x*(1 - x/k)", param: "r", varName: "x",
+                    bounds: { a: [-1, 4], x: [-1, 2] },
+                    expected: 1,
+                    verify: (pts) => pts.length === 1 && Math.abs(pts[0][0]) < 0.1 && Math.abs(pts[0][1]) < 0.1
+                },
+                {
+                    name: "Sine (sin(x)+a)",
+                    eqn: "sin(x) + a", param: "a", varName: "x",
+                    bounds: { a: [-2, 2], x: [-4, 4] },
+                    expected: 2,
+                    verify: (pts) => {
+                        const p1 = pts.some(p => Math.abs(p[0] - (-1)) < 0.1 && Math.abs(p[1] - Math.PI/2) < 0.1);
+                        const p2 = pts.some(p => Math.abs(p[0] - 1) < 0.1 && Math.abs(p[1] - (-Math.PI/2)) < 0.1);
+                        return p1 && p2;
+                    }
+                }
+            ];
+            
+            for (const test of tests) {
+                try {
+                    const eqnCompiled = math.compile(test.eqn);
+                    const derivCompiled = math.derivative(math.parse(test.eqn), test.varName).compile();
+                    
+                    const result = findBifurcationPoints(
+                        test.eqn, eqnCompiled, derivCompiled,
+                        test.param, test.varName,
+                        test.bounds.a, test.bounds.x
+                    );
+                    
+                    const verified = test.verify(result.points);
+                    const passed = result.points.length >= test.expected && verified;
+                    
+                    if (!passed) allPassed = false;
+                    
+                    results += `${passed ? '✅' : '❌'} ${test.name}\n`;
+                    results += `   Found: ${result.points.length} points (expected ≥${test.expected})\n`;
+                    results += `   Method: ${result.method}\n`;
+                    results += `   Verification: ${verified ? 'PASS' : 'FAIL'}\n`;
+                    if (result.points.length > 0) {
+                        results += `   Points: ${result.points.map(p => `(${formatCoord(p[0])}, ${formatCoord(p[1])})`).join(', ')}\n`;
+                    }
+                    if (result.errors && result.errors.length > 0) {
+                        results += `   Errors: ${result.errors.join('; ')}\n`;
+                    }
+                    results += '\n';
+                    
+                } catch (e) {
+                    allPassed = false;
+                    results += `❌ ${test.name}\n   Error: ${e.message}\n\n`;
+                }
+            }
+            
+            results += "=".repeat(40) + "\n";
+            results += allPassed ? '✅ All tests passed!' : '❌ Some tests failed';
+            
+            alert(results);
+            console.log(results);
+        }
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            generatePlot();
+        });
     </script>
 </body>
 </html>
