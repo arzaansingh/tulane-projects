@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bifurcation Diagram Explorer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Crimson+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0e17;
+            --bg-med: #151b2b;
+            --bg-light: #1f2937;
+            --accent-primary: #00d9ff;
+            --accent-secondary: #ff006e;
+            --accent-tertiary: #ffbe0b;
+            --text-primary: #e8edf4;
+            --text-secondary: #9ca3af;
+            --border: #2d3748;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Crimson Pro', serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #0d1420 50%, var(--bg-dark) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(0, 217, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 217, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            animation: fadeIn 1s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            animation: slideIn 0.8s ease-out 0.5s both;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .control-panel {
+            background: var(--bg-med);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            height: fit-content;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--accent-primary);
+            display: inline-block;
+        }
+
+        label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.1);
+        }
+
+        .equation-label {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .equation-label .math {
+            font-style: italic;
+        }
+
+        .range-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), #0099cc);
+            color: var(--bg-dark);
+            box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 217, 255, 0.4);
+        }
+
+        .preset-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .preset-btn {
+            padding: 10px 16px;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .preset-btn:hover {
+            background: var(--bg-med);
+            border-color: var(--accent-secondary);
+            transform: translateX(4px);
+        }
+
+        .plot-container {
+            background: var(--bg-med);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            min-height: 600px;
+        }
+
+        #plot {
+            width: 100%;
+            height: 700px;
+            border-radius: 8px;
+        }
+
+        .info-box {
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 3px solid var(--accent-primary);
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .info-box strong {
+            color: var(--accent-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .syntax-guide {
+            background: var(--bg-light);
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+        }
+
+        .syntax-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .syntax-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .syntax-key {
+            color: var(--accent-secondary);
+        }
+
+        .syntax-value {
+            color: var(--text-secondary);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid var(--bg-light);
+            border-top: 3px solid var(--accent-primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Bifurcation Diagram Explorer</h1>
+            <p class="subtitle">Visualize dynamical systems and stability transitions</p>
+            <p class="subtitle" style="margin-top: 10px; font-size: 0.95rem; opacity: 0.7;">Made by <span style="color: var(--accent-primary); font-weight: 600;">Arzaan Singh</span></p>
+        </header>
+
+        <div class="main-content">
+            <div class="control-panel">
+                <div class="section">
+                    <div class="section-title">Equation</div>
+                    <div class="equation-label">
+                        <span class="math">d</span><input type="text" id="varInput" value="x" style="width: 50px; display: inline-block; margin: 0 5px; padding: 4px 8px; font-size: 0.9rem;"><span class="math">/ dt</span> = <input type="text" id="eqnInput" value="x^3 - x + a" style="width: calc(100% - 120px); display: inline-block; margin: 0; padding: 4px 8px; font-size: 0.9rem;">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Parameters</div>
+                    <label>Parameter Name</label>
+                    <input type="text" id="paramInput" value="a">
+                    
+                    <label>Parameter Range</label>
+                    <div class="range-group">
+                        <input type="number" id="aMin" value="-2" step="0.1" placeholder="Min">
+                        <input type="number" id="aMax" value="2" step="0.1" placeholder="Max">
+                    </div>
+
+                    <label>Variable Range</label>
+                    <div class="range-group">
+                        <input type="number" id="xMin" value="-2" step="0.1" placeholder="Min">
+                        <input type="number" id="xMax" value="2" step="0.1" placeholder="Max">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="generatePlot()">
+                    ▶ Generate Plot
+                </button>
+
+                <div class="section">
+                    <div class="section-title">Presets</div>
+                    <div class="preset-grid">
+                        <button class="preset-btn" onclick="loadPreset('saddle')">Saddle-Node (Hysteresis)</button>
+                        <button class="preset-btn" onclick="loadPreset('pitchfork')">Pitchfork (Supercritical)</button>
+                        <button class="preset-btn" onclick="loadPreset('transcritical')">Transcritical</button>
+                        <button class="preset-btn" onclick="loadPreset('simple')">Simple Saddle-Node</button>
+                        <button class="preset-btn" onclick="loadPreset('logistic')">Logistic Growth</button>
+                        <button class="preset-btn" onclick="loadPreset('sine')">Sine Function</button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Syntax Guide</div>
+                    <div class="syntax-guide">
+                        <div class="syntax-item">
+                            <span class="syntax-key">Power:</span>
+                            <span class="syntax-value">x^2, x^3</span>
+                        </div>
+                        <div class="syntax-item">
+                            <span class="syntax-key">Trig:</span>
+                            <span class="syntax-value">sin(x), cos(x)</span>
+                        </div>
+                        <div class="syntax-item">
+                            <span class="syntax-key">Exp:</span>
+                            <span class="syntax-value">exp(x), log(x)</span>
+                        </div>
+                        <div class="syntax-item">
+                            <span class="syntax-key">Constants:</span>
+                            <span class="syntax-value">k, r → 1.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Legend:</strong> Solid lines = stable equilibria, dashed lines = unstable equilibria. 
+                    Magenta points mark bifurcations. Arrows show flow direction.
+                </div>
+            </div>
+
+            <div class="plot-container">
+                <div id="plot"></div>
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Computing bifurcation diagram...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const presets = {
+            saddle: { eqn: 'x^3 - x + a', param: 'a', var: 'x', amin: -2, amax: 2, xmin: -2, xmax: 2 },
+            pitchfork: { eqn: 'x^3 - a*x', param: 'a', var: 'x', amin: -4, amax: 4, xmin: -4, xmax: 4 },
+            transcritical: { eqn: 'x^2 - a*x', param: 'a', var: 'x', amin: -4, amax: 4, xmin: -4, xmax: 4 },
+            simple: { eqn: 'x^2 - a', param: 'a', var: 'x', amin: -2, amax: 2, xmin: -2, xmax: 2 },
+            logistic: { eqn: 'r*x*(1 - x/k)', param: 'r', var: 'x', amin: -1, amax: 4, xmin: -1, xmax: 2 },
+            sine: { eqn: 'sin(x) + a', param: 'a', var: 'x', amin: -2, amax: 2, xmin: -4, xmax: 4 }
+        };
+
+        function loadPreset(name) {
+            const p = presets[name];
+            document.getElementById('eqnInput').value = p.eqn;
+            document.getElementById('paramInput').value = p.param;
+            document.getElementById('varInput').value = p.var;
+            document.getElementById('aMin').value = p.amin;
+            document.getElementById('aMax').value = p.amax;
+            document.getElementById('xMin').value = p.xmin;
+            document.getElementById('xMax').value = p.xmax;
+            generatePlot();
+        }
+
+        function formatCoord(val) {
+            return Math.abs(val - Math.round(val)) < 1e-9 ? Math.round(val).toString() : val.toFixed(4);
+        }
+
+        function findBifurcationPoints(eqnComp, derivComp, param, varName, aBounds, xBounds) {
+            const res = 60;
+            const bifPoints = [];
+            const aStep = (aBounds[1] - aBounds[0]) / (res - 1);
+            const xStep = (xBounds[1] - xBounds[0]) / (res - 1);
+            const errorGrid = [];
+            
+            for (let i = 0; i < res; i++) {
+                errorGrid[i] = [];
+                for (let j = 0; j < res; j++) {
+                    const scope = { [param]: aBounds[0] + i * aStep, [varName]: xBounds[0] + j * xStep, k: 1.0, r: aBounds[0] + i * aStep };
+                    try {
+                        const f = eqnComp.evaluate(scope);
+                        const df = derivComp.evaluate(scope);
+                        errorGrid[i][j] = Math.log10(f * f + df * df + 1e-15);
+                    } catch { errorGrid[i][j] = 0; }
+                }
+            }
+            
+            for (let i = 1; i < res - 1; i++) {
+                for (let j = 1; j < res - 1; j++) {
+                    if (errorGrid[i][j] < -2) {
+                        let isMin = true;
+                        for (let di = -1; di <= 1 && isMin; di++) {
+                            for (let dj = -1; dj <= 1 && isMin; dj++) {
+                                if (errorGrid[i + di][j + dj] < errorGrid[i][j]) isMin = false;
+                            }
+                        }
+                        if (isMin) {
+                            const a = aBounds[0] + i * aStep;
+                            const x = xBounds[0] + j * xStep;
+                            if (!bifPoints.some(pt => Math.hypot(a - pt[0], x - pt[1]) < 0.05 * (aBounds[1] - aBounds[0]))) {
+                                bifPoints.push([a, x]);
+                            }
+                        }
+                    }
+                }
+            }
+            return bifPoints;
+        }
+
+        function generatePlot() {
+            const eqnStr = document.getElementById('eqnInput').value;
+            const param = document.getElementById('paramInput').value;
+            const varName = document.getElementById('varInput').value;
+            const aMin = parseFloat(document.getElementById('aMin').value);
+            const aMax = parseFloat(document.getElementById('aMax').value);
+            const xMin = parseFloat(document.getElementById('xMin').value);
+            const xMax = parseFloat(document.getElementById('xMax').value);
+
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('plot').style.display = 'none';
+
+            setTimeout(() => {
+                try {
+                    const eqnCompiled = math.compile(eqnStr);
+                    const derivCompiled = math.derivative(math.parse(eqnStr), varName).compile();
+                    const bifPoints = findBifurcationPoints(eqnCompiled, derivCompiled, param, varName, [aMin, aMax], [xMin, xMax]);
+
+                    const res = 300;
+                    const aVals = Array.from({length: res}, (_, i) => aMin + (aMax - aMin) * i / (res - 1));
+                    const xVals = Array.from({length: res}, (_, i) => xMin + (xMax - xMin) * i / (res - 1));
+                    
+                    const Z = [], dZ = [];
+                    for (let j = 0; j < res; j++) {
+                        Z[j] = [];
+                        dZ[j] = [];
+                        for (let i = 0; i < res; i++) {
+                            const scope = { [param]: aVals[i], [varName]: xVals[j], k: 1.0, r: aVals[i] };
+                            try {
+                                Z[j][i] = eqnCompiled.evaluate(scope);
+                                dZ[j][i] = derivCompiled.evaluate(scope);
+                                if (!isFinite(Z[j][i])) Z[j][i] = 0;
+                                if (!isFinite(dZ[j][i])) dZ[j][i] = 0;
+                            } catch {
+                                Z[j][i] = 0;
+                                dZ[j][i] = 0;
+                            }
+                        }
+                    }
+
+                    const traces = [{
+                        type: 'heatmap',
+                        x: aVals,
+                        y: xVals,
+                        z: Z.map(row => row.map(v => Math.sign(v))),
+                        colorscale: [[0, 'rgba(255,230,230,0.5)'], [0.5, 'rgba(255,255,255,0)'], [1, 'rgba(230,242,255,0.5)']],
+                        showscale: false,
+                        hoverinfo: 'skip',
+                        zmin: -1,
+                        zmax: 1
+                    }];
+
+                    // Arrows
+                    const arrRes = 18;
+                    for (let i = 0; i < arrRes; i++) {
+                        for (let j = 0; j < arrRes; j++) {
+                            const a = aMin + (aMax - aMin) * i / (arrRes - 1);
+                            const x = xMin + (xMax - xMin) * j / (arrRes - 1);
+                            const scope = { [param]: a, [varName]: x, k: 1.0, r: a };
+                            try {
+                                const f = eqnCompiled.evaluate(scope);
+                                const maxZ = Math.max(...Z.flat().map(Math.abs));
+                                if (isFinite(f) && Math.abs(f) > 0.05 * maxZ) {
+                                    traces.push({
+                                        type: 'scatter',
+                                        x: [a, a],
+                                        y: [x, x + Math.sign(f) * 0.04 * (xMax - xMin)],
+                                        mode: 'lines',
+                                        line: { color: f > 0 ? '#004488' : '#880000', width: 1.5 },
+                                        showlegend: false,
+                                        hoverinfo: 'skip'
+                                    });
+                                }
+                            } catch {}
+                        }
+                    }
+
+                    // Contours with masking
+                    const Z_stable = Z.map((row, j) => row.map((v, i) => dZ[j][i] < 0 ? v : null));
+                    const Z_unstable = Z.map((row, j) => row.map((v, i) => dZ[j][i] >= 0 ? v : null));
+
+                    traces.push({
+                        type: 'contour',
+                        x: aVals,
+                        y: xVals,
+                        z: Z_stable,
+                        contours: { start: 0, end: 0, size: 1, coloring: 'none' },
+                        line: { color: 'black', width: 3 },
+                        showscale: false,
+                        name: 'Stable',
+                        hoverinfo: 'skip'
+                    });
+
+                    traces.push({
+                        type: 'contour',
+                        x: aVals,
+                        y: xVals,
+                        z: Z_unstable,
+                        contours: { start: 0, end: 0, size: 1, coloring: 'none' },
+                        line: { color: 'black', width: 3, dash: 'dash' },
+                        showscale: false,
+                        name: 'Unstable',
+                        hoverinfo: 'skip'
+                    });
+
+                    if (bifPoints.length > 0) {
+                        traces.push({
+                            type: 'scatter',
+                            x: bifPoints.map(p => p[0]),
+                            y: bifPoints.map(p => p[1]),
+                            mode: 'markers+text',
+                            marker: { color: '#ff00ff', size: 10, line: { color: 'black', width: 2 } },
+                            text: bifPoints.map(p => `(${formatCoord(p[0])}, ${formatCoord(p[1])})`),
+                            textposition: 'top right',
+                            textfont: { family: 'JetBrains Mono', size: 10, color: '#e8edf4' },
+                            name: 'Bifurcation'
+                        });
+                    }
+
+                    Plotly.newPlot('plot', traces, {
+                        title: { text: `d${varName}/dt = ${eqnStr}`, font: { family: 'JetBrains Mono', size: 18, color: '#e8edf4' } },
+                        xaxis: { title: `Parameter (${param})`, gridcolor: '#2d3748', zerolinecolor: '#4a5568', color: '#e8edf4' },
+                        yaxis: { title: `Variable (${varName})`, gridcolor: '#2d3748', zerolinecolor: '#4a5568', color: '#e8edf4' },
+                        plot_bgcolor: '#151b2b',
+                        paper_bgcolor: '#151b2b',
+                        font: { family: 'Crimson Pro', color: '#e8edf4' },
+                        legend: { font: { family: 'JetBrains Mono', size: 11 }, bgcolor: 'rgba(21,27,43,0.8)', bordercolor: '#2d3748', borderwidth: 1 },
+                        margin: { t: 80, r: 20, b: 80, l: 80 }
+                    }, { responsive: true, displaylogo: false });
+                    
+                    document.getElementById('loading').classList.remove('active');
+                    document.getElementById('plot').style.display = 'block';
+                } catch (error) {
+                    console.error(error);
+                    document.getElementById('loading').classList.remove('active');
+                    document.getElementById('plot').style.display = 'block';
+                    alert('Error: ' + error.message);
+                }
+            }, 100);
+        }
+
+        window.onload = generatePlot;
+    </script>
+</body>
+</html>
